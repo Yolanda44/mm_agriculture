@@ -1,0 +1,15 @@
+                                             precision    recall  f1-score   support
+
+                   Climate & Weather Impact       0.00      0.00      0.00        13
+                  Crop Cultivation & Growth       0.53      0.29      0.37        28
+                 Crop Selection & Varieties       0.93      0.52      0.67        27
+             General Agricultural Knowledge       0.37      0.87      0.52        52
+Harvesting, Storage & Post-Harvest Handling       0.00      0.00      0.00         3
+              Irrigation & Water Management       0.62      0.40      0.49        25
+                  Pest & Disease Management       0.69      0.52      0.59        21
+     Soil, Fertilizer & Nutrient Management       0.57      0.38      0.46        21
+ Tools, Technology & Agricultural Practices       0.54      0.33      0.41        21
+
+                                   accuracy                           0.49       211
+                                  macro avg       0.47      0.37      0.39       211
+                               weighted avg       0.53      0.49      0.47       211

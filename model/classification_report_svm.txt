@@ -1,0 +1,14 @@
+                                            precision    recall  f1-score   support
+
+                 Crop Cultivation & Growth       0.76      0.48      0.59        52
+                Crop Selection & Varieties       0.84      0.92      0.88        51
+              Environmental & Post-Harvest       0.79      0.87      0.83        52
+            General Agricultural Knowledge       0.71      0.48      0.57        52
+             Irrigation & Water Management       0.74      0.62      0.67        52
+                 Pest & Disease Management       0.85      0.96      0.90        52
+    Soil, Fertilizer & Nutrient Management       0.68      0.83      0.75        52
+Tools, Technology & Agricultural Practices       0.59      0.79      0.68        52
+
+                                  accuracy                           0.74       415
+                                 macro avg       0.75      0.74      0.73       415
+                              weighted avg       0.75      0.74      0.73       415
