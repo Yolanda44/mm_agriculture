@@ -15,6 +15,7 @@ from api.rag_engine import MyanmarAgriAssistEngine
 # --------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parents[1]
 DATA_PATH = BASE_DIR / "data" / "Agriculture_cleaned.csv"
+TRAIN_DATA_PATH = BASE_DIR / "data" / "Agriculture.csv"
 EDA_DIR = BASE_DIR / "eda"
 PIE_PATH = EDA_DIR / "category_pie.png"
 BAR_PATH = EDA_DIR / "category_bar.png"
@@ -32,6 +33,23 @@ def load_dataset(rows: int = 5):
     if "Unnamed: 0" in df.columns:
         df = df.drop(columns=["Unnamed: 0"])
     return df.head(rows)
+
+@st.cache_data(show_spinner=False)
+def load_sample_instruction() -> str:
+    source_path = TRAIN_DATA_PATH if TRAIN_DATA_PATH.exists() else DATA_PATH
+    if not source_path.exists():
+        return ""
+
+    df = pd.read_csv(source_path)
+    if "Instruction" not in df.columns:
+        return ""
+
+    instructions = df["Instruction"].dropna().astype(str).str.strip()
+    instructions = instructions[instructions != ""]
+    if instructions.empty:
+        return ""
+
+    return instructions.iloc[0]
 
 @st.cache_resource(show_spinner=True)
 def load_engine():
@@ -51,6 +69,7 @@ st.title("🌾 Myanmar Agri-Assist")
 st.write("AI-powered Burmese agricultural knowledge assistant using **XGBoost classification + FAISS RAG retrieval**.")
 
 engine = load_engine()
+sample_instruction = load_sample_instruction()
 
 tabs = st.tabs(["📘 Dataset Overview", "🔍 Topic Classification", "🤖 RAG Assistant"])
 
@@ -93,7 +112,11 @@ with tabs[0]:
 # --------------------------------------------------
 with tabs[1]:
     st.header("🔍 Topic Classification")
-    text = st.text_area("Enter Burmese agricultural instruction or response:", height=200)
+    text = st.text_area(
+        "Enter Burmese agricultural instruction or response:",
+        value=sample_instruction,
+        height=200,
+    )
 
     if st.button("Classify", key="classify_button"):
         if not text.strip():
@@ -109,7 +132,11 @@ with tabs[1]:
 with tabs[2]:
     st.header("🤖 RAG Question Answering Assistant")
 
-    question = st.text_area("Enter a Burmese agricultural question:", height=200)
+    question = st.text_area(
+        "Enter a Burmese agricultural question:",
+        value=sample_instruction,
+        height=200,
+    )
     top_k = st.slider("Number of retrieved references:", 1, 5, 3)
 
     if st.button("Get Answer", key="ask_button"):
@@ -118,10 +145,10 @@ with tabs[2]:
         else:
             result = engine.ask_question(question, top_k=top_k)
 
-            st.subheader("🧠 Generated Answer")
+            st.subheader("Generated Answer")
             st.write(result["answer"])
 
-            st.subheader("📚 Top References")
+            st.subheader("Top References")
 
             for i, ctx in enumerate(result["contexts"], start=1):
                 st.markdown(
